@@ -1,25 +1,56 @@
-#:kivy 2.0.0
+#:import utils kivy.utils
 
-<MyGridLayout>
-    latest_news: root.latest_news
-    
-    GridLayout:
-        cols: 1
-        size: root.width, root.height
-        GridLayout:
-            cols: 2
+# <Label>
+#     font_size:32
+<TextInput>
+    background_color : utils.get_color_from_hex("#db7f58")
 
+<Button>
+    background_color : utils.get_color_from_hex("#5872db")
+
+<MyLayout>
+    BoxLayout:
+        #orientation:"horizontal"
+        orientation:"vertical"
+        size:root.width,root.height
+
+        spacing: 10
+        padding: 200,50
+
+        BoxLayout:
+            orientation:"horizontal"
+            padding:50
             Label:
-                text: 'News'
-            MyScrollView:
-                TextInput:
-                    size_hint: 1, None
-                    height: self.minimum_height
-                    text: root.latest_news
-                    readonly: True
-    
+                text:"Name"
+                #background_color : utils.get_color_from_hex("#db5865")
+                #background_color : (1,0,0,1)
+                font_size: 100
+                color: utils.get_color_from_hex("#58db6e")
+                bold:True
+                italic:True
+                outline_color: utils.get_color_from_hex("#7434eb")
+                outline_width:5
+
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex("#db5865")
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+
+            TextInput:
+                mutiline:False
+
+        BoxLayout:
+            orientation:"horizontal"
+            padding:50
+            Label:
+                text:"Pizza"
+            TextInput:
+                mutiline:False
+
         Button:
-            text: 'Refresh'
-            on_press: root.pressed()
-            background_normal: ''
-            background_color:(0,0,1,0.4)
+            text:"Submit"
+            font_size:64
+        Button:
+            text:"Clear"

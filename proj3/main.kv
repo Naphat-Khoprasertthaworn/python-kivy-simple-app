@@ -1,0 +1,25 @@
+#:import utils kivy.utils
+
+<Button>
+    font_size:32
+    size_hint:(0.3,0.3)
+
+<MyLayout>
+    FloatLayout:
+        size:root.width,root.height
+
+        Button:
+            text:"Top Left"
+            # {x,y,top,bottom,left,right}
+            pos_hint:{"top":1}
+        Button:
+            text:"Top Right"
+            pos_hint:{"top":1,"right":1}
+        Button:
+            text:"Center"
+            pos_hint:{"top":0.5,"right":0.5,"botom":0.5,"left":0.5}
+        Button:
+            text:"Bottom Left"
+        Button:
+            text:"Bottom Right"
+            pos_hint:{"right":1}

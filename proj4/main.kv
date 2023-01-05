@@ -1,0 +1,27 @@
+#:import utils kivy.utils
+
+<Label>
+    font_size:32
+
+
+
+<MyLayout>
+    BoxLayout:
+        orientation:"vertical"
+        size:root.width,root.height
+        Label:
+            id:nameLabel
+            text:"What ?"
+            font_size:64
+            color: utils.get_color_from_hex("#58db6e")
+            bold:True
+
+        TextInput:
+            id:nameInput
+            multiline:False
+            size_hint:(1,0.5)
+        Button:
+            id:button
+            on_press:root.press()
+            text:"submit"
+            size_hint:(1,0.5)

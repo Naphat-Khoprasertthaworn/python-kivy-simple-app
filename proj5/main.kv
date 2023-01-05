@@ -1,0 +1,98 @@
+#:import utils kivy.utils
+# color link -> https://betterthanhex.com/foggy-forest/
+<Label>
+    font_size:32
+    font_name:"Roboto-Regular"
+
+<MyLayout>
+    BoxLayout:
+        size:root.width,root.height
+        orientation:"vertical"
+        padding:100,200
+        canvas.before:
+            Rectangle:
+                pos:self.pos
+                size:root.width,root.height
+                source:"FoggyForest.jpg"
+
+        BoxLayout:
+            orientation:"vertical"
+            padding:100
+            spacing:50
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex("#EBE1E080")
+                Rectangle:
+                    pos:self.pos
+                    size:self.size
+
+
+            Label:
+                id:"title"
+                text:"YouTube Downloader"
+                font_name:"Roboto-Bold"
+                font_size:64
+                color:utils.get_color_from_hex("#1C1F2E")
+                bold:True
+                
+
+
+            BoxLayout:
+                orientation:"horizontal"
+                padding:50,0
+                Label:
+                    canvas.before:
+                        Color:
+                            rgba: utils.get_color_from_hex("#2F3543")
+                        Rectangle:
+                            pos:self.pos
+                            size:self.size
+                    id:"link"
+                    text:"Link"
+                    size_hint_y:None
+                    size_hint_x:0.3
+                    height:62
+
+
+                TextInput:
+                    id:url
+                    multiline:False
+                    size_hint_y:None
+                    height:62
+                    border_width: 10
+                    border_color: [1,0,0,1]
+                    padding: 10,self.height / 2.0 - (self.line_height / 2.0) * len(self._lines)
+                    halign:"left"
+                    line_width: 5
+                
+                Button:
+                    text:"Get video"
+                    on_press:root.findVideo()
+                    size_hint_y:None
+                    size_hint_x:0.3
+                    height:62
+
+
+
+
+            GridLayout:
+                id:resBox
+                spacing:15
+                padding:200,0
+                cols:1
+                # Button:
+                #     text:"360P"
+                # Button:
+                #     text:"720P"
+                # Button:
+                #     text:"1080P"
+            
+            Button:
+                size_hint:.4,.4
+                pos_hint: {"x":.3, "y":.3} # .2 + 2*(.4) = 1
+                text:"Download !"
+                font_size:48
+                on_press:root.download()
+                #border: 30,30,30,30
+                
+        

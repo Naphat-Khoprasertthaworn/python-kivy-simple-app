@@ -1,0 +1,22 @@
+#:import utils kivy.utils
+<MyLayout>
+    # canvas.before:
+    #     Color:
+    #         rgba:(1,1,1,1)
+    #     Rectangle:
+    #         pos:self.pos
+    #         size:self.size
+    BoxLayout:
+        orientation:"vertical"
+        size : root.width , root.height
+        padding:50
+        spacing:20
+
+        Image:
+            source: "3370913.jpg"
+            allow_stretch: True
+            keep_ratio: True
+
+        Button:
+            text:"Submit"
+

@@ -2,7 +2,6 @@ import kivy
 from kivy.config import Config
 Config.set('graphics', 'resizable', False) # Config.set should be used before importing any other Kivy modules
 
-
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
@@ -22,29 +21,42 @@ class MyLayout(Widget):
         super().__init__(**kwargs)
         self.res = None
         self.yt = None
+        self.resList = None
 
     def selectRes(self,instance):
         print("Select",instance.text)
         self.res = instance.text
 
     def findVideo(self):
+        t = threading.Thread(target=self.findVideoThread)
+        t.start()
+        return
+
+    def findVideoThread(self):
         url = self.ids.url.text
         try:
             self.yt = YouTube(url)
         except:
             print("link error")
             
-        resList = [stream for stream in self.yt.streams.filter(file_extension="mp4",progressive=True)] # progressive=False -> no sound
-        for res in resList:
+        self.resList = [stream for stream in self.yt.streams.filter(file_extension="mp4",progressive=True)] # progressive=False -> no sound
+        self.addResButton()
+        print( [stream for stream in self.yt.streams.filter(progressive=True)] )
+
+    @mainthread
+    def addResButton(self):
+        #print(self.resList)
+        if(self.resList == None):
+            print("resList is None")
+            return
+        for res in self.resList:
             button = Button(text=res.resolution)
             button.bind(on_press = self.selectRes)
             self.ids.resBox.add_widget( button )
 
 
     def downloadThread(self):
-        # print("thread working!")
         try:
-            # print("start download")
             self.yt.streams.filter(resolution=self.res).first().download()
             self.clearUrl()
         except:
@@ -68,6 +80,7 @@ class MyLayout(Widget):
     def clearUrl(self):
         self.yt = None
         self.res = None
+        self.resList = None
         self.ids.url.text = ""
         
         

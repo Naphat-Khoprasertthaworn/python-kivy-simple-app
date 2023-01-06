@@ -10,6 +10,12 @@ from kivy.core.window import Window
 from kivy.clock import mainthread
 from pytube import YouTube
 from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+from kivy.uix.progressbar import ProgressBar
+
+import shutil
+import os
 
 import threading
 
@@ -22,6 +28,7 @@ class MyLayout(Widget):
         self.res = None
         self.yt = None
         self.resList = None
+        self.mapDownloadingProgress = {}
 
     def selectRes(self,instance):
         print("Select",instance.text)
@@ -36,16 +43,24 @@ class MyLayout(Widget):
         url = self.ids.url.text
         try:
             self.yt = YouTube(url)
+            self.resList = [stream for stream in self.yt.streams.filter(progressive=True)] # progressive=False -> no sound
+            self.addResButton()
         except:
+            self.clearResButton()
             print("link error")
             
-        self.resList = [stream for stream in self.yt.streams.filter(progressive=True)] # progressive=False -> no sound
-        self.addResButton()
-        print( [stream for stream in self.yt.streams.filter(progressive=True)] )
+    def progressFunction(self,stream, chunk, bytes_remaining): #PyTube Download Progress
+        size = stream.filesize
+        progress = int((float(abs(bytes_remaining-size)/size))*float(100))
+        self.addDownloadProgress( stream,progress )
+        print(progress)
+
+    @mainthread
+    def clearResButton(self):
+        self.ids.resBox.clear_widgets()
 
     @mainthread
     def addResButton(self):
-        #print(self.resList)
         if(self.resList == None):
             print("resList is None")
             return
@@ -56,12 +71,20 @@ class MyLayout(Widget):
 
 
     def downloadThread(self):
+        # self.yt.register_on_progress_callback(self.progressFunction)
+        # directoryPath = f"{ os.environ['HOME'] }/Downloads"
+        # self.yt.streams.filter(resolution=self.res).first().download(output_path=directoryPath)
+        #self.clearUrl()
         try:
-            self.yt.streams.filter(resolution=self.res).first().download()
-            self.clearUrl()
+            self.yt.register_on_progress_callback(self.progressFunction)
+            directoryPath = f"{ os.environ['HOME'] }/Downloads" #download to every OS Downloads folder
+            self.yt.streams.filter(resolution=self.res).first().download(output_path=directoryPath)
+            pass
         except:
             print("download error")
+            self.popUpError("download error")
             return
+        self.clearUrl()
         print("download success")
         
     def download(self):
@@ -82,15 +105,33 @@ class MyLayout(Widget):
         self.res = None
         self.resList = None
         self.ids.url.text = ""
-        
-        
-        
+        self.clearResButton()
+
+    @mainthread
+    def popUpError(self,text):
+        popup = Popup(
+            title='Error!',
+            content=Label(text=text),
+            size_hint=(None, None), size=(400, 400),
+        )
+        popup.open()
     
+    @mainthread
+    def addDownloadProgress(self,stream,progress):
+        if stream not in self.mapDownloadingProgress:
+            self.mapDownloadingProgress[stream] = ProgressBar(max=100)
+            self.ids.downloadingBox.add_widget( self.mapDownloadingProgress[stream] )
+        
+        self.mapDownloadingProgress[stream].value = progress
+
+        if progress == 100:
+            self.ids.downloadingBox.remove_widget( self.mapDownloadingProgress[stream] )
+            del self.mapDownloadingProgress[stream]
+        return
 
 class MyApp(App):
     def build(self):
         Window.size = (700, 800)
-        #Window.clearcolor = (1,1,1,1)
         return MyLayout()
 
 

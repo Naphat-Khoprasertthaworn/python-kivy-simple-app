@@ -39,7 +39,7 @@
 
             BoxLayout:
                 orientation:"horizontal"
-                padding:50,0
+                padding:50,50
                 Label:
                     canvas.before:
                         Color:
@@ -49,16 +49,16 @@
                             size:self.size
                     id:"link"
                     text:"Link"
-                    size_hint_y:None
+                    #size_hint_y:0.4
                     size_hint_x:0.3
-                    height:62
+                    #height:62
 
 
                 TextInput:
                     id:url
                     multiline:False
-                    size_hint_y:None
-                    height:62
+                    #size_hint_y:0.4
+                    #height:62
                     border_width: 10
                     border_color: [1,0,0,1]
                     padding: 10,self.height / 2.0 - (self.line_height / 2.0) * len(self._lines)
@@ -68,9 +68,9 @@
                 Button:
                     text:"Get video"
                     on_press:root.findVideo()
-                    size_hint_y:None
+                    #size_hint_y:0.4
                     size_hint_x:0.3
-                    height:62
+                    #height:62
 
 
 
@@ -94,5 +94,9 @@
                 font_size:48
                 on_press:root.download()
                 #border: 30,30,30,30
+
+            GridLayout:
+                id:downloadingBox
+                cols:1
                 
         

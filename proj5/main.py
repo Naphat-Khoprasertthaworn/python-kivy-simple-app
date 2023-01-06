@@ -39,7 +39,7 @@ class MyLayout(Widget):
         except:
             print("link error")
             
-        self.resList = [stream for stream in self.yt.streams.filter(file_extension="mp4",progressive=True)] # progressive=False -> no sound
+        self.resList = [stream for stream in self.yt.streams.filter(progressive=True)] # progressive=False -> no sound
         self.addResButton()
         print( [stream for stream in self.yt.streams.filter(progressive=True)] )
 
